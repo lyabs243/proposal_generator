@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Simple Template File",
+        "path": "data/about/simple-template-file.md",
+        "type": "text",
+        "metadata": {
+            "category": "My Resume"
+        }
+    },
+    {
+        "name": "Template Project",
+        "path": "data/projects/template-project/readme.md",
+        "type": "text",
+        "metadata": {
+            "category": "Project",
+            "name": "Template Project",
+            "purpose": "personal",
+            "visibility": "private",
+            "technologies": ["AI", "RAG", "OpenAI", "Python"]
+        }
+    }
+]
