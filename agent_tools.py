@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from langchain_openai import OpenAIEmbeddings
 from langchain_chroma import Chroma
 from app_utils import generate_key
-from agents import Agent, FunctionTool, RunContextWrapper, function_tool
+from agents import function_tool
 
 load_dotenv(override=True)
 
