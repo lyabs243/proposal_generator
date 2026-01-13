@@ -185,3 +185,6 @@ data/
 
 # Chroma database
 Chroma_db/
+
+# Test Notebooks
+notebooks/tests/
