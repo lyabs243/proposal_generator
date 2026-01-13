@@ -83,3 +83,16 @@ After initializing your data folder, you need to create and populate the vector 
    After running the notebook, you should see a `chroma_db/` folder in your project root. The notebook includes test cells at the end to verify the database is working correctly with similarity searches and metadata filtering.
 
 **Note:** If you update your data files or `data.json`, you'll need to re-run the notebook to refresh the vector database. The notebook automatically deletes and recreates the database each time it runs.
+
+### Initialize Technology List
+To ensure the agent can accurately identify and extract technologies from user input, you need to set up the list of allowed technologies. Follow these steps:
+
+1. **Run the Data Technologies Notebook**
+   Open and execute the notebook `notebooks/data_technologies.ipynb`. This notebook will:
+   - Execute the method `get_all_technologies` from `app_utils.py`.
+   - Generate a comprehensive list of technologies that the agent can recognize.
+
+2. **Update `agent_tools.py`**
+   After running the notebook, copy the generated list of technologies and replace the existing `allowed_technologies` string in the `get_technologies` function within `agent_tools.py`. This ensures the agent uses the most up-to-date list for technology extraction.
+
+**Note:** If you need to update the list of technologies in the future, simply re-run the notebook and update `agent_tools.py` accordingly.
