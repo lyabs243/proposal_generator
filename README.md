@@ -23,6 +23,7 @@ pip install -r requirements.txt
 
 ```
 OPENAI_API_KEY=sk-...your-openai-key...
+FREELANCER_NAME=Your Name
 ```
 
 ### Initialize Data Folder
