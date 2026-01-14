@@ -25,6 +25,7 @@ pip install -r requirements.txt
 ```
 OPENAI_API_KEY=sk-...your-openai-key...
 FREELANCER_NAME=Your Name
+API_KEY=Put anything you want (The goal is to show that you need security in production)
 ```
 
 ### Initialize Data Folder
@@ -98,3 +99,24 @@ To ensure the agent can accurately identify and extract technologies from user i
    After running the notebook, copy the generated list of technologies and replace the existing `allowed_technologies` string in the `get_technologies` function within `agent_tools.py`. This ensures the agent uses the most up-to-date list for technology extraction.
 
 **Note:** If you need to update the list of technologies in the future, simply re-run the notebook and update `agent_tools.py` accordingly.
+
+## Run the Application
+
+You can run direcltly the FastAPI backend that exposes an endpoint to generate proposals.
+
+First start the FastAPI server with the following command:
+```
+fastapi dev main.py
+```
+Then you can send a POST request to the endpoint `/generate-proposal` with a JSON body containing the job description. For example, using `curl`:
+
+```
+curl -X 'POST' \
+  'http://127.0.0.1:8000/generate-proposal' \
+  -H 'accept: application/json' \
+  -H 'X-API-Key: The same API Key in your .env file' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "job_description": "Your job description here"
+}'
+```

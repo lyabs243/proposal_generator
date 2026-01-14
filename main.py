@@ -1,6 +1,10 @@
-from fastapi import FastAPI, HTTPException
+import os
+from fastapi import FastAPI, HTTPException, Security, Depends, status, Request
+from fastapi.security import APIKeyHeader
 from pydantic import BaseModel, Field
 from models.proposal_agent import ProposalAgent
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 app = FastAPI(
     title="Proposal Generator API",
@@ -8,6 +12,38 @@ app = FastAPI(
     version="1.0.0"
 )
 
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc: RequestValidationError):
+    """
+    Custom exception handler to provide more user-friendly validation error messages.
+    """
+    errors = []
+    for error in exc.errors():
+        if error["type"] == "missing":
+            field_name = error["loc"][-1]
+            errors.append(f"The field '{field_name}' is required but was missing.")
+        else:
+            errors.append(error["msg"])
+
+    return JSONResponse(
+        status_code=422,
+        content={"detail": errors[0] if len(errors) == 1 else errors},
+    )
+
+
+# Security Setup
+API_KEY_NAME = "X-API-Key"
+API_KEY = os.getenv("API_KEY")
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+
+async def get_api_key(api_key_header: str = Security(api_key_header)):
+    if api_key_header == API_KEY:
+        return api_key_header
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Could not validate credentials"
+    )
 
 class JobDescriptionRequest(BaseModel):
     job_description: str = Field(
@@ -35,7 +71,8 @@ async def root():
     "/generate-proposal", 
     response_model=ProposalResponse,
     tags=["Proposal"],
-    summary="Generate a proposal from a job description"
+    summary="Generate a proposal from a job description",
+    dependencies=[Depends(get_api_key)]
 )
 async def generate_proposal(request: JobDescriptionRequest):
     """
