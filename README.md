@@ -10,8 +10,9 @@ Then, in the root of the project, execute the following commands:
 
 ```
 uv venv
-venv\Scripts\activate
 ```
+
+Once you type this command, it will show you how to activate the environment depending on the OS it can be `venv\Scripts\activate` or `source .venv/bin/activate`
 
 2. Install dependencies:
 
