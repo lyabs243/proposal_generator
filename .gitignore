@@ -184,7 +184,10 @@ cython_debug/
 data/
 
 # Chroma database
-Chroma_db/
+chroma_db/
 
 # Test Notebooks
 notebooks/tests/
+
+# VS Code
+.vscode/
