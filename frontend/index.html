@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h1>Proposal Generator</h1>
+            </div>
+            <p class="tagline">Transform job descriptions into winning proposals</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="section-header">
+                    <h2>Job Description</h2>
+                    <span class="badge">Input</span>
+                </div>
+                <div class="textarea-wrapper">
+                    <textarea 
+                        id="jobDescription" 
+                        placeholder="Paste the job description here...&#10;&#10;Example: Looking for an experienced Python developer to build a FastAPI backend with authentication, database integration, and REST API endpoints..."
+                        rows="8"
+                    ></textarea>
+                    <div class="textarea-footer">
+                        <span class="char-count"><span id="charCount">0</span> characters</span>
+                        <button class="btn-clear" id="clearBtn" title="Clear text">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6L6 18M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <button class="btn-generate" id="generateBtn">
+                    <span class="btn-text">Generate Proposal</span>
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </section>
+
+            <!-- Output Section -->
+            <section class="output-section">
+                <div class="section-header">
+                    <h2>Generated Proposal</h2>
+                    <span class="badge badge-output">Output</span>
+                </div>
+                
+                <!-- Empty State -->
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <h3>No proposal yet</h3>
+                    <p>Enter a job description and click "Generate Proposal" to get started</p>
+                </div>
+
+                <!-- Loading State -->
+                <div class="loading-state hidden" id="loadingState">
+                    <div class="loader">
+                        <div class="loader-circle"></div>
+                        <div class="loader-circle"></div>
+                        <div class="loader-circle"></div>
+                    </div>
+                    <div class="loading-text">
+                        <h3>Crafting your proposal</h3>
+                        <p class="loading-status" id="loadingStatus">Analyzing job requirements...</p>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <!-- Result State -->
+                <div class="result-state hidden" id="resultState">
+                    <div class="result-actions">
+                        <button class="btn-action" id="editBtn" title="Edit proposal">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                            <span>Edit</span>
+                        </button>
+                        <button class="btn-action" id="copyBtn" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                            </svg>
+                            <span>Copy</span>
+                        </button>
+                        <button class="btn-action btn-regenerate" id="regenerateBtn" title="Generate new proposal">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 4v6h-6M1 20v-6h6"/>
+                                <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                            </svg>
+                            <span>Regenerate</span>
+                        </button>
+                    </div>
+                    <div class="result-content">
+                        <div class="proposal-text" id="proposalText" contenteditable="false"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Toast Notification -->
+        <div class="toast hidden" id="toast">
+            <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                <path d="M22 4L12 14.01l-3-3"/>
+            </svg>
+            <span class="toast-message" id="toastMessage">Copied to clipboard!</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

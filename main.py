@@ -1,10 +1,11 @@
 import os
 from fastapi import FastAPI, HTTPException, Security, Depends, status, Request
 from fastapi.security import APIKeyHeader
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from models.proposal_agent import ProposalAgent
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware 
 
 app = FastAPI(
@@ -20,6 +21,13 @@ app.add_middleware(
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
 )
+
+# Get the directory where main.py is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+
+# Mount static files (CSS, JS)
+app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
 
 
 @app.exception_handler(RequestValidationError)
@@ -73,7 +81,20 @@ class ProposalResponse(BaseModel):
 
 @app.get("/", tags=["Home"])
 async def root():
-    return {"message": "Hello World"}
+    """Serve the frontend HTML page"""
+    return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
+
+
+@app.get("/styles.css", tags=["Home"])
+async def get_styles():
+    """Serve the CSS file"""
+    return FileResponse(os.path.join(FRONTEND_DIR, "styles.css"), media_type="text/css")
+
+
+@app.get("/script.js", tags=["Home"])
+async def get_script():
+    """Serve the JavaScript file"""
+    return FileResponse(os.path.join(FRONTEND_DIR, "script.js"), media_type="application/javascript")
 
 
 @app.post(
