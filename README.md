@@ -100,6 +100,20 @@ To ensure the agent can accurately identify and extract technologies from user i
 
 **Note:** If you need to update the list of technologies in the future, simply re-run the notebook and update `agent_tools.py` accordingly.
 
+### Setup Frontend configuration
+
+To use the User Interface, you need to allow it to communicate with the backend API.
+
+1. Create a `config.js` file in the `frontend` folder:
+```javascript
+const CONFIG = {
+    API_KEY: "Your_Secret_Key", // Must match the API_KEY in your .env file
+    API_URL: "http://localhost:8000"
+};
+```
+
+2. Make sure the `API_KEY` matches the one you set in your `.env` file during the initial setup.
+
 ## Run the Application
 
 You can run direcltly the FastAPI backend that exposes an endpoint to generate proposals.
@@ -120,3 +134,10 @@ curl -X 'POST' \
   "job_description": "Your job description here"
 }'
 ```
+
+### Accessing the User Interface
+Once the server is running (started with `fastapi dev main.py`), you can access the frontend by navigating to:
+```
+http://127.0.0.1:8000
+```
+This serves the application where you can paste job descriptions and generate proposals via a graphical interface.
