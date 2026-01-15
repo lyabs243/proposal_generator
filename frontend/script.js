@@ -6,6 +6,9 @@ const generateBtn = document.getElementById('generateBtn');
 const emptyState = document.getElementById('emptyState');
 const loadingState = document.getElementById('loadingState');
 const resultState = document.getElementById('resultState');
+const errorState = document.getElementById('errorState');
+const errorMessage = document.getElementById('errorMessage');
+const retryBtn = document.getElementById('retryBtn');
 const loadingStatus = document.getElementById('loadingStatus');
 const progressFill = document.getElementById('progressFill');
 const proposalText = document.getElementById('proposalText');
@@ -72,6 +75,7 @@ function setupEventListeners() {
     editBtn.addEventListener('click', toggleEdit);
     copyBtn.addEventListener('click', copyToClipboard);
     regenerateBtn.addEventListener('click', handleGenerate);
+    if (retryBtn) retryBtn.addEventListener('click', handleGenerate);
 }
 
 // Update character count
@@ -100,45 +104,73 @@ async function handleGenerate() {
     showState('loading');
     generateBtn.disabled = true;
     
-    // Simulate API call with loading animation
-    await simulateLoading();
-    
-    // Show result
-    proposalText.textContent = sampleProposal;
-    showState('result');
-    generateBtn.disabled = false;
-    
-    // Reset edit state
-    isEditing = false;
-    proposalText.contentEditable = 'false';
-    editBtn.classList.remove('active');
-}
-
-// Simulate loading with progress
-async function simulateLoading() {
+    // Start loading animation
     let progress = 0;
     let messageIndex = 0;
+    progressFill.style.width = '0%';
+    loadingStatus.textContent = loadingMessages[0];
     
-    return new Promise((resolve) => {
-        const interval = setInterval(() => {
-            // Update progress
-            progress += Math.random() * 15 + 5;
-            if (progress > 100) progress = 100;
+    const progressInterval = setInterval(() => {
+        // Increment progress slowly up to 90%
+        if (progress < 90) {
+            progress += Math.random() * 2 + 0.5;
             progressFill.style.width = `${progress}%`;
             
-            // Update message
-            if (progress > (messageIndex + 1) * (100 / loadingMessages.length)) {
-                messageIndex = Math.min(messageIndex + 1, loadingMessages.length - 1);
+            // Update message based on progress
+            if (progress > (messageIndex + 1) * (90 / loadingMessages.length) && messageIndex < loadingMessages.length - 1) {
+                messageIndex++;
                 loadingStatus.textContent = loadingMessages[messageIndex];
             }
-            
-            // Complete
-            if (progress >= 100) {
-                clearInterval(interval);
-                setTimeout(resolve, 300);
-            }
-        }, 200);
-    });
+        }
+    }, 100);
+    
+    try {
+        const response = await fetch(`${CONFIG.API_URL || ""}/generate-proposal`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-Key': CONFIG.API_KEY
+            },
+            body: JSON.stringify({ job_description: description })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            let errorMessage = "Failed to generate proposal";
+            try {
+                const errorJson = JSON.parse(errorText);
+                if (errorJson.detail) errorMessage = errorJson.detail;
+            } catch (e) { /* ignore json parse error */ }
+            throw new Error(errorMessage);
+        }
+
+        const data = await response.json();
+        
+        // Complete loading
+        clearInterval(progressInterval);
+        progressFill.style.width = '100%';
+        loadingStatus.textContent = "Finalizing...";
+        
+        // Small delay to let the user see the 100% bar
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Show result
+        proposalText.textContent = data.proposal;
+        showState('result');
+
+    } catch (error) {
+        clearInterval(progressInterval);
+        console.error(error);
+        if (errorMessage) errorMessage.textContent = error.message;
+        showState('error');
+    } finally {
+        generateBtn.disabled = false;
+        
+        // Reset edit state
+        isEditing = false;
+        proposalText.contentEditable = 'false';
+        editBtn.classList.remove('active');
+    }
 }
 
 // Show specific state
@@ -146,6 +178,7 @@ function showState(state) {
     emptyState.classList.add('hidden');
     loadingState.classList.add('hidden');
     resultState.classList.add('hidden');
+    if (errorState) errorState.classList.add('hidden');
     
     // Reset loading state
     if (state === 'loading') {
@@ -162,6 +195,9 @@ function showState(state) {
             break;
         case 'result':
             resultState.classList.remove('hidden');
+            break;
+        case 'error':
+            if (errorState) errorState.classList.remove('hidden');
             break;
     }
 }

@@ -97,6 +97,12 @@ async def get_script():
     return FileResponse(os.path.join(FRONTEND_DIR, "script.js"), media_type="application/javascript")
 
 
+@app.get("/config.js", tags=["Home"])
+async def get_config():
+    """Serve the Config file"""
+    return FileResponse(os.path.join(FRONTEND_DIR, "config.js"), media_type="application/javascript")
+
+
 @app.post(
     "/generate-proposal", 
     response_model=ProposalResponse,

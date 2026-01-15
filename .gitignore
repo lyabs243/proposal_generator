@@ -191,3 +191,4 @@ notebooks/tests/
 
 # VS Code
 .vscode/
+frontend/config.js
