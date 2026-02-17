@@ -141,3 +141,13 @@ Once the server is running (started with `fastapi dev main.py`), you can access 
 http://127.0.0.1:8000
 ```
 This serves the application where you can paste job descriptions and generate proposals via a graphical interface.
+
+## Screenshots
+
+**Generating a proposal:**
+
+![Generating](screenshots/generating.jpg)
+
+**Generated proposal:**
+
+![Generated](screenshots/generated.jpg)
