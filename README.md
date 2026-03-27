@@ -1,4 +1,7 @@
 # Proposal Generator Agent
+
+[![Request a Live Demo](https://img.shields.io/badge/💬_Request_a_Live_Demo-Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/lyabs243)
+
 An agent that generates automatically cover messages based on previous projects, resume, and other details about the freelancer using the power of RAG with LangChain and Open AI agent SDK.
 
 ## Setup
