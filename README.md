@@ -6,21 +6,17 @@ An agent that generates automatically cover messages based on previous projects,
  ### Create and activate a virtual environment:
 
 If you don't already have UV, [install it](https://pydevtools.com/handbook/how-to/how-to-install-uv/).
-Then, in the root of the project, execute the following commands:
+Then, in the root of the project, execute the following command to create the virtual environment and install all dependencies:
 
 ```
-uv venv
+uv sync
 ```
 
-Once you type this command, it will show you how to activate the environment depending on the OS it can be `venv\Scripts\activate` or `source .venv/bin/activate`
+Once you type this command, you can activate the environment depending on the OS it can be `venv\Scripts\activate` or `source .venv/bin/activate`
 
-2. Install dependencies:
+### Set up environment variables
 
-```
-pip install -r requirements.txt
-```
-
-3. Create a `.env` file in the project root (the app uses `python-dotenv` to load env vars). At minimum set the keys for whichever providers you plan to use. Example:
+Create a `.env` file in the project root (the app uses `python-dotenv` to load env vars). At minimum set the keys for whichever providers you plan to use. Example:
 
 ```
 OPENAI_API_KEY=sk-...your-openai-key...
@@ -120,7 +116,7 @@ You can run direcltly the FastAPI backend that exposes an endpoint to generate p
 
 First start the FastAPI server with the following command:
 ```
-fastapi dev main.py
+python main.py
 ```
 Then you can send a POST request to the endpoint `/generate-proposal` with a JSON body containing the job description. For example, using `curl`:
 
@@ -136,7 +132,7 @@ curl -X 'POST' \
 ```
 
 ### Accessing the User Interface
-Once the server is running (started with `fastapi dev main.py`), you can access the frontend by navigating to:
+Once the server is running (started with `python main.py`), you can access the frontend by navigating to:
 ```
 http://127.0.0.1:8000
 ```

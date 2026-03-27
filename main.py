@@ -1,4 +1,5 @@
 import os
+import uvicorn
 from fastapi import FastAPI, HTTPException, Security, Depends, status, Request
 from fastapi.security import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
@@ -123,3 +124,7 @@ async def generate_proposal(request: JobDescriptionRequest):
         return ProposalResponse(proposal=proposal_text)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating proposal: {str(e)}")
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

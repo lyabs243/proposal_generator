@@ -1,0 +1,20 @@
+[project]
+name = "proposal-generator"
+version = "1.0.0"
+description = "An agent that generates cover messages based on previous projects and resume using RAG with LangChain and OpenAI."
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi==0.128.0",
+    "uvicorn==0.40.0",
+    "python-dotenv==1.2.1",
+    "pydantic==2.12.5",
+    "openai==2.15.0",
+    "openai-agents==0.6.5",
+    "langchain==1.2.3",
+    "langchain-openai==1.1.7",
+    "langchain-chroma==1.1.0",
+    "langgraph==1.0.6",
+    "chromadb==1.4.0",
+    "ipykernel==7.1.0",
+    "ipython==9.9.0",
+]
